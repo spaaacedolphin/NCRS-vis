@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgn8pkg3jysk1"]
+
+[ext_resource type="Script" path="res://control.gd" id="1_3o8hn"]
+
+[node name="Node" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_3o8hn")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_right = 147.0
+offset_bottom = 64.0
+text = "Load NCRS file"
+
+[node name="FileContentView" type="TextEdit" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 62.0
+offset_right = 851.0
+offset_bottom = 644.0
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+position = Vector2i(250, 100)
+size = Vector2i(700, 400)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.ncrs")
+
+[node name="StartVis" type="Button" parent="."]
+layout_mode = 0
+offset_left = 683.0
+offset_top = -4.0
+offset_right = 849.0
+offset_bottom = 65.0
+disabled = true
+text = "Start Visualization"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="file_selected" from="FileDialog" to="." method="_on_file_dialog_file_selected"]
+[connection signal="pressed" from="StartVis" to="." method="_on_start_vis_pressed"]

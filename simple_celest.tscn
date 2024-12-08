@@ -1,0 +1,40 @@
+[gd_scene load_steps=7 format=3 uid="uid://d26t4bpdq1qnu"]
+
+[ext_resource type="Script" path="res://addons/TrailRenderer/Runtime/GD/trail_renderer.gd" id="1_koh7w"]
+[ext_resource type="Script" path="res://simple_celest.gd" id="1_tfukp"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a06cy"]
+resource_local_to_scene = true
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+emission_energy_multiplier = 2.0
+fixed_size = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_q4dy2"]
+resource_local_to_scene = true
+material = SubResource("StandardMaterial3D_a06cy")
+radius = 0.02
+height = 0.04
+
+[sub_resource type="Curve" id="Curve_r1am2"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0]
+point_count = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w7j8v"]
+resource_local_to_scene = true
+emission_enabled = true
+emission = Color(1, 1, 1, 1)
+use_point_size = true
+point_size = 3.0
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_tfukp")
+
+[node name="Celest" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_q4dy2")
+
+[node name="Trail" type="Node3D" parent="."]
+script = ExtResource("1_koh7w")
+curve = SubResource("Curve_r1am2")
+alignment = 0
+material = SubResource("StandardMaterial3D_w7j8v")

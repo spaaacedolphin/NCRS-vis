@@ -1,0 +1,202 @@
+[gd_scene load_steps=21 format=3 uid="uid://cijl1s2g0y26"]
+
+[ext_resource type="Script" path="res://simple_vis.gd" id="1_l6go3"]
+[ext_resource type="PackedScene" uid="uid://d26t4bpdq1qnu" path="res://simple_celest.tscn" id="2_dyl1j"]
+[ext_resource type="Texture2D" uid="uid://bnssewm3nwkhs" path="res://starmap_2020_8k_gal.exr" id="3_jg37s"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera/phantom_camera_3d.gd" id="3_rquqj"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="4_3kxkx"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="5_akqja"]
+[ext_resource type="Script" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="6_8glg8"]
+[ext_resource type="Script" path="res://free_view.gd" id="8_40b17"]
+[ext_resource type="FontFile" uid="uid://dqdkqy8mxatuq" path="res://latinmodern-math.otf" id="9_t0trp"]
+[ext_resource type="Shader" path="res://grid.gdshader" id="10_0ry53"]
+[ext_resource type="Script" path="res://grid_plane.gd" id="11_gmpop"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_27w25"]
+panorama = ExtResource("3_jg37s")
+filter = false
+
+[sub_resource type="Sky" id="Sky_isy3y"]
+sky_material = SubResource("PanoramaSkyMaterial_27w25")
+
+[sub_resource type="Environment" id="Environment_5h0ax"]
+background_mode = 2
+sky = SubResource("Sky_isy3y")
+
+[sub_resource type="Resource" id="Resource_5gdrk"]
+script = ExtResource("4_3kxkx")
+duration = 1.0
+transition = 0
+ease = 2
+
+[sub_resource type="Resource" id="Resource_0j8ik"]
+script = ExtResource("5_akqja")
+cull_mask = 1048575
+h_offset = 0.0
+v_offset = 0.0
+projection = 0
+fov = 75.0
+size = 1.0
+frustum_offset = Vector2(0, 0)
+near = 0.05
+far = 4000.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_hmgx4"]
+font = ExtResource("9_t0trp")
+font_size = 20
+
+[sub_resource type="LabelSettings" id="LabelSettings_x1qtt"]
+font = ExtResource("9_t0trp")
+font_size = 20
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_2og8h"]
+render_priority = 0
+shader = ExtResource("10_0ry53")
+shader_parameter/axis_width = 0.0003
+shader_parameter/unit = 0.04
+shader_parameter/offset = 0.001
+shader_parameter/max_color = 0.7
+shader_parameter/max_alpha = 1.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_14wsg"]
+material = SubResource("ShaderMaterial_2og8h")
+size = Vector2(10000, 10000)
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_l6go3")
+scb_scene = ExtResource("2_dyl1j")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_5h0ax")
+
+[node name="FreeCam" type="Node3D" parent="." node_paths=PackedStringArray("follow_target", "look_at_target")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49598e+10, 0)
+script = ExtResource("3_rquqj")
+priority = 2
+follow_mode = 1
+follow_target = NodePath("../free_view")
+look_at_mode = 1
+look_at_target = NodePath("../free_view")
+tween_resource = SubResource("Resource_5gdrk")
+camera_3d_resource = SubResource("Resource_0j8ik")
+look_at_damping_value = 1.0
+
+[node name="RealCam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49598e+10, 0)
+
+[node name="PhantomCameraHost" type="Node" parent="RealCam"]
+script = ExtResource("6_8glg8")
+
+[node name="free_view" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49598e+10, 0)
+script = ExtResource("8_40b17")
+
+[node name="CameraInfo" type="Control" parent="free_view"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CurPos" type="Label" parent="free_view/CameraInfo"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 11.0
+offset_right = 67.0
+offset_bottom = 34.0
+text = "(x,y,z)"
+label_settings = SubResource("LabelSettings_hmgx4")
+
+[node name="CurSpeed" type="Label" parent="free_view/CameraInfo"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 42.0
+offset_right = 89.0
+offset_bottom = 65.0
+text = "0.1 au/s"
+label_settings = SubResource("LabelSettings_x1qtt")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlaySpeedSlider" type="HSlider" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.075
+anchor_bottom = 0.075
+offset_left = 379.0
+offset_top = 62.0
+offset_right = 717.0
+offset_bottom = 78.0
+min_value = -10.0
+max_value = 10.0
+tick_count = 21
+ticks_on_borders = true
+metadata/_edit_use_anchors_ = true
+
+[node name="PlaySpeedLabel" type="Label" parent="Control/PlaySpeedSlider"]
+layout_mode = 0
+offset_left = 164.0
+offset_top = 28.0
+offset_right = 217.0
+offset_bottom = 54.0
+text = "X0"
+
+[node name="RetainSlider" type="HSlider" parent="Control"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 93.0
+offset_right = 97.0
+offset_bottom = 121.0
+max_value = 1.0
+step = 0.0
+value = 1.0
+
+[node name="CoordinateToggle" type="CheckButton" parent="Control"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 160.0
+offset_right = 59.0
+offset_bottom = 184.0
+
+[node name="CurTime" type="Label" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 251.0
+offset_top = 11.0
+offset_right = 843.0
+offset_bottom = 32.0
+grow_horizontal = 2
+text = "t = "
+label_settings = SubResource("LabelSettings_hmgx4")
+horizontal_alignment = 1
+
+[node name="Timeline" type="HSlider" parent="Control/CurTime"]
+layout_mode = 1
+offset_left = 128.0
+offset_top = 29.0
+offset_right = 466.0
+offset_bottom = 45.0
+max_value = 1.0
+step = 0.0
+editable = false
+scrollable = false
+
+[node name="grid_plane" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_14wsg")
+script = ExtResource("11_gmpop")
+
+[node name="GridUnitLen" type="Label" parent="grid_plane"]
+offset_left = 15.0
+offset_top = 137.0
+offset_right = 172.0
+offset_bottom = 160.0
+text = "grid : 
+"
+label_settings = SubResource("LabelSettings_x1qtt")
+
+[connection signal="value_changed" from="Control/PlaySpeedSlider" to="." method="_on_play_speed_slider_value_changed"]
+[connection signal="value_changed" from="Control/RetainSlider" to="." method="_on_retain_slider_value_changed"]
+[connection signal="toggled" from="Control/CoordinateToggle" to="." method="_on_coordinate_toggle_toggled"]
