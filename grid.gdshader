@@ -12,10 +12,10 @@ float on_y_axis(vec2 uv){	//Same goes for y-axis
 	return uv.x*float(abs(uv.y-0.5)<=axis_width);
 }
 
-uniform float unit = 0.04;
+uniform float unit = 0.02;
 uniform float offset = 0.001;
 float on_line(vec2 uv){
-	vec2 q = floor( pow(sin((TAU/unit)*uv), vec2(2,2)) +offset );
+	vec2 q = floor( pow(sin((PI/unit)*uv), vec2(2,2)) +offset );
 	return clamp(q.x+q.y,0,1);
 }
 

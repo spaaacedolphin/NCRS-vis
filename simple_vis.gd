@@ -4,7 +4,7 @@ extends Node3D
 const sizeof_double = 8
 var celest_bodies = Array()
 var file_pos: int
-var play_speed = 0
+var play_speed: int = 0
 var start_fpos: int
 var delta_fpos : int
 var end_fpos : int
@@ -20,6 +20,7 @@ var retain : int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	Global.cur_step = 0
 	file_pos = Global.f.get_position()
 	start_fpos = file_pos
 	delta_fpos = sizeof_double*3*Global.num_celest
@@ -40,6 +41,12 @@ func _ready() -> void:
 	barycenter /= total_mass
 	barycenter_vel = total_momentum/total_mass
 	
+	var avg_dist = 0
+	for i in Global.num_celest:
+		avg_dist += barycenter.distance_to(Global.celest[i].pos)
+	avg_dist /= Global.num_celest
+	$free_view.position.y = 2.5*avg_dist
+	
 	for i in Global.num_celest:
 		celest_bodies.append(scb_scene.instantiate())
 		celest_bodies[i].initialize(Global.celest[i].pos,Color.from_hsv(float(i)/float(Global.num_celest),0.75,0.97),retain)
@@ -53,6 +60,9 @@ const MINUTE = 60.0
 const HOUR = 60.0*MINUTE
 const DAY = 24.0*HOUR
 const YEAR = 365.25*DAY
+
+var units = [YEAR,DAY,HOUR,MINUTE,1]
+var units_str = ["y","d","h","m","s"]
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -101,11 +111,12 @@ func _process(_delta: float) -> void:
 	else:
 		file_pos = end_fpos	
 	
-	cur_t = int((file_pos-start_fpos)/delta_fpos)*Global.delta_t
+	Global.cur_step = int((file_pos-start_fpos)/delta_fpos)
+	cur_t = Global.cur_step*Global.delta_t
 	
 
 func _on_play_speed_slider_value_changed(value: float) -> void:
-	play_speed = value
+	play_speed = int(value)
 	$Control/PlaySpeedSlider/PlaySpeedLabel.text = "X%d" % play_speed
 
 
@@ -115,8 +126,15 @@ func _on_coordinate_toggle_toggled(toggled_on: bool) -> void:
 
 func _on_retain_slider_value_changed(value: float) -> void:
 	retain = int(value*num_step)
-	#print(retain)
-	#for i in Global.num_celest:
-		#celest_bodies[i].initialize()
-	#barycenter_point.initialize()
+	for i in Global.num_celest:
+		celest_bodies[i].set_retain(retain)
+	barycenter_point.set_retain(retain)
 	
+	var retain_time =  retain * Global.delta_t
+	var x = units.size()-1
+	for i in units.size():
+		if int(retain_time/units[i]):
+			x = i
+			break
+	
+	$Control/RetainSlider/RetainLabel.text = "%.2f%s" % [retain_time/units[x],units_str[x]]

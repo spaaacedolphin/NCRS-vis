@@ -2,12 +2,12 @@ class_name TrailRenderer
 extends LineRenderer
 
 
-@export var lifetime: float = 1.0
+@export var lifetime: int = 1
 @export var min_vertex_distance: float = 0.5
 @export var is_emitting: bool = true
 
 var _trail_pieces: Array = []
-var _is_emitting_last_frame: bool
+var _is_emitting_last_frame: bool = true
 
 
 func _enter_tree() -> void:
@@ -15,19 +15,16 @@ func _enter_tree() -> void:
 	_trail_pieces.append(TrailPiece.new(self))
 
 
-func update(d) -> void:
-	if not _is_emitting_last_frame and is_emitting:
-		var trail_piece: TrailPiece = _trail_pieces[0]
-		if _trail_pieces.size() == 0 or trail_piece.is_dirty():
-			_trail_pieces.insert(0, TrailPiece.new(self))
+func update() -> void:
+	if not _is_emitting_last_frame and is_emitting and _trail_pieces.size()==0:
+		_trail_pieces.insert(0, TrailPiece.new(self))
 	_is_emitting_last_frame = is_emitting
 
 	if _trail_pieces.size() > 0:
 		_trail_pieces[0].on_delete_complete = _on_delete_complete
 
-	for i: int in range(_trail_pieces.size()):
-		var trail_piece: TrailPiece = _trail_pieces[i]
-		trail_piece.process(d)
+	for i in _trail_pieces.size():
+		_trail_pieces[i].process()
 
 
 func _on_delete_complete() -> void:

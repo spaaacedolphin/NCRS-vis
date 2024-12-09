@@ -3,14 +3,10 @@ class_name TrailPiece
 
 var on_delete_complete: Callable
 
-var _time: float = 0.0
+var _time: int = 0
 var _last_position: Vector3 = Vector3()
 var _last_spawn_point: Vector3 = Vector3()
-var _remaining_lifetime: float = 0.0
-var _alive_time: float = 0.0
 var _is_moving: bool = false
-var _is_dirty: bool = false
-var _first_point_original: Point
 var _line_renderer: LineRenderer = LineRenderer.new()
 var _trail_renderer: TrailRenderer
 
@@ -21,50 +17,28 @@ func _init(source_trail_renderer: TrailRenderer) -> void:
 
 	_last_position = _trail_renderer.global_position
 	_last_spawn_point = _trail_renderer.global_position
-	_remaining_lifetime = _trail_renderer.lifetime
 
 
-func process(delta: float) -> void:
+func process() -> void:
 	_line_renderer.copy_values(_trail_renderer)
-	_time = Time.get_ticks_msec() / 1000.0
-
-	if not _trail_renderer.is_emitting and _line_renderer.points.size() > 0:
-		_is_dirty = true
-
-	if _line_renderer.points.size() > 0 and _remaining_lifetime > 0:
-		_alive_time += delta
-
-	if _line_renderer.points.size() == 0:
-		_alive_time = 0
-
+	_time = Global.cur_step
 	_is_moving = _last_position != _line_renderer.global_position
 	_last_position = _line_renderer.global_position
-	_remaining_lifetime = (
-		(_remaining_lifetime - delta) 
-		if _line_renderer.points.size() > 0 
-		else _trail_renderer.lifetime
-	)
-	_remaining_lifetime = min(_remaining_lifetime, _trail_renderer.lifetime)
-
-	_remove_points()
-
-	if _line_renderer.points.size() == 0 and is_dirty():
-		on_delete_complete.call()
-		_line_renderer.queue_free()
-
+	
 	if not _trail_renderer.is_emitting:
 		_last_spawn_point = _trail_renderer.global_position
+		_remove_points()
 		return
+		
 	_add_points()
+	_remove_points()
 
-
-func is_dirty() -> bool:
-	return _is_dirty
-
-
+	if _line_renderer.points.size() == 0: #and is_dirty():
+		on_delete_complete.call()
+		_line_renderer.queue_free()
+		
+	
 func _add_points() -> void:
-	if is_dirty():
-		return
 
 	if _line_renderer.points.size() == 0 and _is_moving:
 		_line_renderer.points.append(Point.new(_line_renderer.global_position))
@@ -86,23 +60,7 @@ func _add_points() -> void:
 
 
 func _remove_points() -> void:
-	if _remaining_lifetime > 0:
-		return
 
-	if _first_point_original == null:
-		_first_point_original = Point.new(_line_renderer.get_point(0).position)
-
-	while (
-		_line_renderer.points.size() > 0
-		and _time >= _line_renderer.get_point(0).time + _alive_time
-	):
-		_line_renderer.points.remove_at(0)
-		_first_point_original = (
-			Point.new(_line_renderer.get_point(0).position)
-			if _line_renderer.points.size() > 0
-			else null
-		)
-
-	if _line_renderer.points.size() >= 2:
-		var t: float = inverse_lerp(_first_point_original.time, _line_renderer.get_point(0).time + _alive_time, _time)
-		_line_renderer.points[0].position = _first_point_original.position.lerp(_line_renderer.get_point(1).position, t)
+	for i in _line_renderer.points.size():
+		if abs(_time - _line_renderer.get_point(0).time) > _trail_renderer.lifetime:
+			_line_renderer.points.remove_at(0)

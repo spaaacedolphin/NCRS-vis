@@ -5,7 +5,7 @@ var position: Vector3
 var alignment_vector: Vector3
 ## DO NOT MODIFY THIS. Used internally by the LineRenderer.
 var texture_offset: float
-var time: float
+var time: int
 
 
 func _init(source_position: Vector3, bitangent: Vector3 = Vector3.INF) -> void:
@@ -13,4 +13,4 @@ func _init(source_position: Vector3, bitangent: Vector3 = Vector3.INF) -> void:
 
 	self.position = source_position
 	self.alignment_vector = bitangent.normalized()
-	self.time = Time.get_ticks_msec() / 1000.0
+	self.time = Global.cur_step

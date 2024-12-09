@@ -13,4 +13,4 @@ func _process(_delta: float) -> void:
 	cam_pos = get_node("../free_view").position;
 	ratio = cam_pos.length()/1000.0;
 	scale = Vector3(ratio,(cam_pos.y/abs(cam_pos.y))*ratio,ratio);
-	$GridUnitLen.text="grid unit : %.3f au" % (ratio*10000*0.04/AU)
+	$GridUnitLen.text="grid unit : %.3f au" % (ratio*10000*0.02/AU)

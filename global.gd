@@ -24,6 +24,7 @@ var delta_t: float
 var mass_default_unit: int
 var pos_default_unit: int
 var vel_default_unit: int
+var cur_step : int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

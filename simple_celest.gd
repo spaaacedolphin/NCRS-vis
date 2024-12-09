@@ -5,7 +5,6 @@ extends Node3D
 func _ready() -> void:
 	pass # Replace with function body.
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
@@ -18,4 +17,7 @@ func initialize(init_pos: Vector3, color: Color, retain: int):
 	
 func move(pos: Vector3):
 	position = pos
-	$Trail.update(1)
+	$Trail.update()
+
+func set_retain(retain: int):
+	$Trail.lifetime = retain

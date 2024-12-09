@@ -53,7 +53,7 @@ font_size = 20
 render_priority = 0
 shader = ExtResource("10_0ry53")
 shader_parameter/axis_width = 0.0003
-shader_parameter/unit = 0.04
+shader_parameter/unit = 0.02
 shader_parameter/offset = 0.001
 shader_parameter/max_color = 0.7
 shader_parameter/max_alpha = 1.0
@@ -70,7 +70,7 @@ scb_scene = ExtResource("2_dyl1j")
 environment = SubResource("Environment_5h0ax")
 
 [node name="FreeCam" type="Node3D" parent="." node_paths=PackedStringArray("follow_target", "look_at_target")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49598e+10, 0)
+transform = Transform3D(6.12323e-17, 1, -6.12323e-17, 0, 6.12323e-17, 1, 1, -6.12323e-17, 3.7494e-33, 0, 1000, 0)
 script = ExtResource("3_rquqj")
 priority = 2
 follow_mode = 1
@@ -82,13 +82,13 @@ camera_3d_resource = SubResource("Resource_0j8ik")
 look_at_damping_value = 1.0
 
 [node name="RealCam" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49598e+10, 0)
+transform = Transform3D(6.12323e-17, 1, -6.12323e-17, 0, 6.12323e-17, 1, 1, -6.12323e-17, 3.7494e-33, 0, 1000, 0)
 
 [node name="PhantomCameraHost" type="Node" parent="RealCam"]
 script = ExtResource("6_8glg8")
 
 [node name="free_view" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.49598e+10, 0)
+transform = Transform3D(6.12323e-17, 1, -6.12323e-17, 0, 6.12323e-17, 1, 1, -6.12323e-17, 3.7494e-33, 0, 1000, 0)
 script = ExtResource("8_40b17")
 
 [node name="CameraInfo" type="Control" parent="free_view"]
@@ -147,12 +147,21 @@ text = "X0"
 [node name="RetainSlider" type="HSlider" parent="Control"]
 layout_mode = 0
 offset_left = 10.0
-offset_top = 93.0
-offset_right = 97.0
-offset_bottom = 121.0
+offset_top = 81.0
+offset_right = 198.0
+offset_bottom = 109.0
 max_value = 1.0
 step = 0.0
 value = 1.0
+
+[node name="RetainLabel" type="Label" parent="Control/RetainSlider"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 28.0
+offset_right = 76.0
+offset_bottom = 51.0
+text = "retain : ∞"
+label_settings = SubResource("LabelSettings_hmgx4")
 
 [node name="CoordinateToggle" type="CheckButton" parent="Control"]
 layout_mode = 0
