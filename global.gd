@@ -26,6 +26,14 @@ var pos_default_unit: int
 var vel_default_unit: int
 var cur_step : int
 
+const AU: float = 149597870700
+const C: float = 299792458
+const KM: float = 1000
+const pos_units = [AU,KM,1]
+const pos_units_str = ["au","km","m"]
+var pos_unit: float
+var pos_unit_str: String
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	var root = get_tree().root

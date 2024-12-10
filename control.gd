@@ -76,6 +76,9 @@ func _on_file_dialog_file_selected(path: String) -> void:
 	Global.pos_default_unit = pos_default_unit
 	Global.vel_default_unit = vel_default_unit
 	
+	Global.pos_unit = Global.pos_units[pos_default_unit]
+	Global.pos_unit_str = Global.pos_units_str[pos_default_unit]
+	
 	$StartVis.disabled = false
 	
 

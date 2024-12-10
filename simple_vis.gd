@@ -61,8 +61,11 @@ const HOUR = 60.0*MINUTE
 const DAY = 24.0*HOUR
 const YEAR = 365.25*DAY
 
-var units = [YEAR,DAY,HOUR,MINUTE,1]
-var units_str = ["y","d","h","m","s"]
+const units = [YEAR,DAY,HOUR,MINUTE,1]
+const units_str = ["y","d","h","m","s"]
+
+var drag_started: bool = false
+var drag_ended: bool = true
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -90,7 +93,8 @@ func _process(_delta: float) -> void:
 	if time_text.length() == 4:
 		time_text = "t = 0"
 	$Control/CurTime.text = time_text
-	$Control/CurTime/Timeline.value = cur_t/Global.max_t
+	if not drag_started:
+		$Control/CurTime/Timeline.value = cur_t/Global.max_t
 	
 	var cur_barycenter = barycenter+cur_t*barycenter_vel
 	barycenter_point.move(cur_barycenter-coordinate_offset*cur_barycenter)
@@ -111,9 +115,15 @@ func _process(_delta: float) -> void:
 	else:
 		file_pos = end_fpos	
 	
-	Global.cur_step = int((file_pos-start_fpos)/delta_fpos)
-	cur_t = Global.cur_step*Global.delta_t
+	if drag_started and drag_ended:
+		Global.cur_step = $Control/CurTime/Timeline.value*num_step
+		file_pos = start_fpos + Global.cur_step*delta_fpos
+		drag_started = false
+	else:
+		Global.cur_step = int((file_pos-start_fpos)/delta_fpos)
 	
+	cur_t = Global.cur_step*Global.delta_t
+
 
 func _on_play_speed_slider_value_changed(value: float) -> void:
 	play_speed = int(value)
@@ -138,3 +148,12 @@ func _on_retain_slider_value_changed(value: float) -> void:
 			break
 	
 	$Control/RetainSlider/RetainLabel.text = "%.2f%s" % [retain_time/units[x],units_str[x]]
+
+
+func _on_timeline_drag_started() -> void:
+	drag_started = true
+	drag_ended = false
+
+
+func _on_timeline_drag_ended(_value_changed: bool) -> void:
+	drag_ended = true

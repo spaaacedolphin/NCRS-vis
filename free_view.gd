@@ -7,16 +7,17 @@ var UP_AXIS = Vector3(0,1,0)
 var RIGHT_AXIS = Vector3(1,0,0)
 var FRONT_AXIS = Vector3(0,0,1)
 
-const AU = 149597870700
-const C = 299792458
-const KM = 1000
+const AU = Global.AU
+const C = Global.C
+const KM = Global.KM
+
 var move_speed = 0.1*AU
 var move_dir = Vector3()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	
-	$CameraInfo/CurPos.text = "%.3v" % (position/AU)
+	$CameraInfo/CurPos.text = "%.3v %s" % [position/Global.pos_unit,Global.pos_unit_str]
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if Input.is_action_pressed("roll_clockwise"):
@@ -41,7 +42,7 @@ func _process(delta: float) -> void:
 	if move_dir.length()>0:
 		move_dir = move_dir.normalized()
 		position += move_speed * move_dir * delta
-		$CameraInfo/CurPos.text = "%.3v au" % (position/AU)
+		$CameraInfo/CurPos.text = "%.3v %s" % [position/Global.pos_unit,Global.pos_unit_str]
 		
 
 func _unhandled_input(event: InputEvent) -> void:
