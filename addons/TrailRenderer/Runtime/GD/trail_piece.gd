@@ -25,11 +25,6 @@ func process() -> void:
 	_is_moving = _last_position != _line_renderer.global_position
 	_last_position = _line_renderer.global_position
 	
-	if not _trail_renderer.is_emitting:
-		_last_spawn_point = _trail_renderer.global_position
-		_remove_points()
-		return
-		
 	_add_points()
 	_remove_points()
 

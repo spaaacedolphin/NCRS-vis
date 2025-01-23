@@ -16,7 +16,19 @@ var move_dir = Vector3()
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	pass
+
+func init_speed() -> void:
 	$CameraInfo/CurPos.text = "%.3v %s" % [position/Global.pos_unit,Global.pos_unit_str]
+	move_speed = position.y/2.5
+	if move_speed>25*C:
+		$CameraInfo/CurSpeed.text = "%.2f au/s" % (move_speed/AU)
+	elif move_speed>=0.01*C:
+		$CameraInfo/CurSpeed.text = "%.2f c" % (move_speed/C)
+	elif move_speed>=KM:
+		$CameraInfo/CurSpeed.text = "%.2f km/s" % (move_speed/KM)
+	else:
+		$CameraInfo/CurSpeed.text = "%.2f m/s" % move_speed
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

@@ -29,8 +29,8 @@ var cur_step : int
 const AU: float = 149597870700
 const C: float = 299792458
 const KM: float = 1000
-const pos_units = [AU,KM,1]
-const pos_units_str = ["au","km","m"]
+const pos_units = [1,KM,AU]
+const pos_units_str = ["m","km","au"]
 var pos_unit: float
 var pos_unit_str: String
 

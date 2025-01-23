@@ -46,6 +46,7 @@ func _ready() -> void:
 		avg_dist += barycenter.distance_to(Global.celest[i].pos)
 	avg_dist /= Global.num_celest
 	$free_view.position.y = 2.5*avg_dist
+	$free_view.init_speed()
 	
 	for i in Global.num_celest:
 		celest_bodies.append(scb_scene.instantiate())
