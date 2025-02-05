@@ -15,7 +15,8 @@ float on_y_axis(vec2 uv){	//Same goes for y-axis
 uniform float unit = 0.02;
 uniform float offset = 0.001;
 float on_line(vec2 uv){
-	vec2 q = floor( pow(sin((PI/unit)*uv), vec2(2,2)) +offset );
+	uv -= vec2(0.5,0.5);
+	vec2 q = floor( pow(cos((PI/unit)*uv), vec2(2,2)) + offset );
 	return clamp(q.x+q.y,0,1);
 }
 
@@ -36,7 +37,7 @@ uniform float max_color = 0.7;
 uniform float max_alpha = 1.0;
 void fragment() {
 	vec3 color = vec3(on_x_axis(UV),on_y_axis(UV),0);
-	color += grid(UV);
+	color += float(length(color)==0.0)*grid(UV);
 	color *= max_color;
 	ALBEDO = color;
 	EMISSION = color;

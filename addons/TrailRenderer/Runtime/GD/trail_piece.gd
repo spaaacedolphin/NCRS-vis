@@ -27,11 +27,6 @@ func process() -> void:
 	
 	_add_points()
 	_remove_points()
-
-	if _line_renderer.points.size() == 0: #and is_dirty():
-		on_delete_complete.call()
-		_line_renderer.queue_free()
-		
 	
 func _add_points() -> void:
 
