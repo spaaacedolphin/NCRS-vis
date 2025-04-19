@@ -16,7 +16,8 @@ uniform float unit = 0.02;
 uniform float offset = 0.001;
 float on_line(vec2 uv){
 	uv -= vec2(0.5,0.5);
-	vec2 q = floor( pow(cos((PI/unit)*uv), vec2(2,2)) + offset );
+	vec2 q = cos((PI/unit)*uv);
+	q = floor( q*q + offset );
 	return clamp(q.x+q.y,0,1);
 }
 

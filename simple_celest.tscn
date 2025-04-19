@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://d26t4bpdq1qnu"]
 
-[ext_resource type="Script" path="res://addons/TrailRenderer/Runtime/GD/trail_renderer.gd" id="1_koh7w"]
-[ext_resource type="Script" path="res://simple_celest.gd" id="1_tfukp"]
+[ext_resource type="Script" uid="uid://dvmby0xnl1yer" path="res://addons/TrailRenderer/Runtime/GD/trail_renderer.gd" id="1_koh7w"]
+[ext_resource type="Script" uid="uid://6u8k4plcckyq" path="res://simple_celest.gd" id="1_tfukp"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a06cy"]
 resource_local_to_scene = true
